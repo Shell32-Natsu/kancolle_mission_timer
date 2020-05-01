@@ -127,7 +127,7 @@ class MissionPanel extends React.Component<{
         this.stopTimer();
         if (this.state.notify)
           new Notification(
-            `远征「"${this.props.missionInfo[this.state.missionId].name}」结束`,
+            `远征「${this.props.missionInfo[this.state.missionId].name}」结束`,
             {
               body: this.getFleetName(this.props.fleetId),
               tag: `${this.props.fleetId}${this.state.missionId}`,
