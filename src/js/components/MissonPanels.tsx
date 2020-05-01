@@ -46,7 +46,7 @@ class MissionPanel extends React.Component<{
     startTime: 0,
     endTime: 0,
     timeRemained: 15 * 60,
-    missionId: 1,
+    missionId: 0,
     stopEarlier: true,
     notify: true,
     startDisabled: false,
@@ -161,7 +161,7 @@ class MissionPanel extends React.Component<{
           </Typography>
           <FormControl>
             <InputLabel>请选择</InputLabel>
-            <Select autoWidth defaultValue="1" onChange={this.changeMission}>
+            <Select autoWidth defaultValue="0" onChange={this.changeMission}>
               {this.getMissionMenuItems(this.props.missionInfo)}
             </Select>
             <FormHelperText>远征任务</FormHelperText>
