@@ -136,9 +136,11 @@ class MissionPanel extends React.Component<{
             }
           );
       }
-      this.setState({
-        timeRemained: this.state.endTime - _nowTime
-      });
+      else {
+        this.setState({
+          timeRemained: this.state.endTime - _nowTime
+        });
+      }
     }, 1000);
   }
 
