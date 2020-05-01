@@ -1,4 +1,4 @@
-const kcwikiMissionInfoUrl = "http://api.kcwiki.moe/missions";
+const kcwikiMissionInfoUrl = "https://api.kcwiki.moe/missions";
 
 async function getMissionInfo(): Promise<MissionInfo> {
   const resp = (await fetch(kcwikiMissionInfoUrl)).json();
