@@ -24,11 +24,13 @@ jobs:
       run: |
         npm install
         npm run build
-        cp index.html dist/
+        mkdir build
+        cp index.html build/
+        cp -r dist build/
 
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         BRANCH: gh-pages 
-        FOLDER: dist
+        FOLDER: build
