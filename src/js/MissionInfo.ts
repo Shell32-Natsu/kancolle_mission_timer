@@ -1,7 +1,14 @@
 const kcwikiMissionInfoUrl = "https://api.kcwiki.moe/missions";
 
-async function getMissionInfo(): Promise<MissionInfo> {
-  const resp = (await fetch(kcwikiMissionInfoUrl)).json();
+async function getMissionInfo(): Promise<Array<MissionInfo>> {
+  const resp = await (await fetch(kcwikiMissionInfoUrl)).json();
+  resp.sort((left: MissionInfo, right: MissionInfo) => {
+    if (left.maparea_id === right.maparea_id) {
+      return left.id < right.id ? -1 : 1;
+    }
+    else
+      return left.maparea_id < right.maparea_id ? -1 : 1;
+  });
   return resp;
 }
 
@@ -17,6 +24,7 @@ interface MissionInfo {
   "win_item1": Array<number>,	// 获得资源1 [0]=Item ID, [1]=数量
   "win_item2": Array<number>,	// 获得资源2
   "return_flag": number 		// 远征是否可以终止
+  "disp_no": string
 }
 
 export {

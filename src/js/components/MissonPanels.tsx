@@ -67,14 +67,14 @@ class MissionPanel extends React.Component<{
     let res: any = [];
     let currentAreaId = 1;
     let offsetInCurrentArea = 0;
-    missionInfo.forEach((mission) => {
+    missionInfo.forEach((mission, idx) => {
       if (mission.maparea_id !== currentAreaId) {
         offsetInCurrentArea = 0;
         currentAreaId = mission.maparea_id;
       }
       offsetInCurrentArea++;
       res.push(
-        <MenuItem value={mission.id} key={mission.id}>
+        <MenuItem value={idx} key={mission.id}>
           [{mission.maparea_id}-{offsetInCurrentArea}] {mission.name} ({this.formatTime(mission.time)})
         </MenuItem>
       );
@@ -99,7 +99,7 @@ class MissionPanel extends React.Component<{
     const id: number = Number(event.target.value);
     this.setState({
       missionId: id,
-      timeRemained: this.props.missionInfo[id - 1].time * 60
+      timeRemained: this.props.missionInfo[id].time * 60
     });
   }
 
@@ -117,7 +117,7 @@ class MissionPanel extends React.Component<{
       startDisabled: true,
       stopDisabled: false,
       startTime: nowTime,
-      endTime: nowTime + this.props.missionInfo[this.state.missionId - 1].time * 60
+      endTime: nowTime + this.props.missionInfo[this.state.missionId].time * 60
     });
     this.timerId = window.setInterval(() => {
       let _nowTime = Math.floor(Date.now() / 1000);
@@ -127,10 +127,10 @@ class MissionPanel extends React.Component<{
         this.stopTimer();
         if (this.state.notify)
           new Notification(
-            `远征「"${this.props.missionInfo[this.state.missionId - 1].name}」结束`,
+            `远征「"${this.props.missionInfo[this.state.missionId].name}」结束`,
             {
               body: this.getFleetName(this.props.fleetId),
-              tag: `${this.props.fleetId}${this.state.missionId - 1}`,
+              tag: `${this.props.fleetId}${this.state.missionId}`,
               renotify: true,
               requireInteraction: true
             }
@@ -148,7 +148,7 @@ class MissionPanel extends React.Component<{
     this.setState({
       startDisabled: false,
       stopDisabled: true,
-      timeRemained: this.props.missionInfo[this.state.missionId - 1].time * 60
+      timeRemained: this.props.missionInfo[this.state.missionId].time * 60
     });
   }
 
