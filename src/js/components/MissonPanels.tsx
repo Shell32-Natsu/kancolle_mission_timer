@@ -13,6 +13,7 @@ import Switch from "@material-ui/core/Switch";
 import Button from "@material-ui/core/Button";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import StopIcon from "@material-ui/icons/Stop";
+
 import { MissionInfo } from "../MissionInfo";
 
 const styles = (theme: Theme) => createStyles({
@@ -39,7 +40,9 @@ interface MissionPanelState {
 class MissionPanel extends React.Component<{
   classes: Record<string, string>,
   fleetId: number,
-  missionInfo: Array<MissionInfo>
+  missionInfo: Array<MissionInfo>,
+  msgChannel: MessageChannel,
+  serviceWorkerRegistration: ServiceWorkerRegistration
 }> {
   classes: Record<string, string>;
   state: MissionPanelState = {
@@ -110,6 +113,10 @@ class MissionPanel extends React.Component<{
     });
   };
 
+  get fleetId(): string {
+    return `fleet_${this.props.fleetId}`;
+  }
+
   // Handler for start timer
   startTimer = () => {
     const nowTime = Math.floor(Date.now() / 1000);
@@ -126,13 +133,19 @@ class MissionPanel extends React.Component<{
       if (this.state.endTime <= _nowTime) {
         this.stopTimer();
         if (this.state.notify)
-          new Notification(
+          this.props.serviceWorkerRegistration.showNotification(
             `远征「${this.props.missionInfo[this.state.missionId].name}」结束`,
             {
               body: this.getFleetName(this.props.fleetId),
-              tag: `${this.props.fleetId}${this.state.missionId}`,
               renotify: true,
-              requireInteraction: true
+              requireInteraction: true,
+              tag: this.fleetId,
+              actions: [
+                {
+                  action: "restart-timer",
+                  title: "Restart"
+                }
+              ]
             }
           );
       }
@@ -152,6 +165,15 @@ class MissionPanel extends React.Component<{
       stopDisabled: true,
       timeRemained: this.props.missionInfo[this.state.missionId].time * 60
     });
+  }
+
+  async componentDidMount() {
+    const msgChannel = this.props.msgChannel;
+    msgChannel.port1.onmessage = (msg: MessageEvent) => {
+      console.log(JSON.stringify(msg.data, null, 2));
+      if (msg.data.restart)
+        this.startTimer();
+    };
   }
 
   render() {
@@ -231,7 +253,9 @@ class MissionPanel extends React.Component<{
 
 class MissionPanels extends React.Component<{
   classes: Record<string, string>,
-  missionInfo: Array<MissionInfo>
+  missionInfo: Array<MissionInfo>,
+  msgChannels: Array<MessageChannel>,
+  serviceWorkerRegistration: ServiceWorkerRegistration
 }> {
   classes: Record<string, string>;
 
@@ -243,7 +267,14 @@ class MissionPanels extends React.Component<{
   createPanels = (num: Number) => {
     let list: any = [];
     for (let i = 0; i < num; i++) {
-      list.push(<MissionPanel classes={this.props.classes} key={i} fleetId={i} missionInfo={this.props.missionInfo} />);
+      list.push(<MissionPanel
+        classes={this.props.classes}
+        key={i}
+        fleetId={i}
+        missionInfo={this.props.missionInfo}
+        msgChannel={this.props.msgChannels[i]}
+        serviceWorkerRegistration={this.props.serviceWorkerRegistration}
+      />);
     }
     return list;
   }

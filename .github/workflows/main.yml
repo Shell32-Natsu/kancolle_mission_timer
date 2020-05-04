@@ -27,6 +27,7 @@ jobs:
         mkdir build
         cp index.html build/
         cp -r dist build/
+        mv build/dist/service_worker.* build/
 
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@releases/v3

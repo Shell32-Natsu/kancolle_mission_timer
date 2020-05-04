@@ -9,6 +9,11 @@ module.exports = {
     extensions: [".ts", ".tsx", ".js"]
   },
 
+  entry: {
+    index: "./src/index.tsx",
+    service_worker: "./src/service_worker.ts"
+  },
+
   module: {
     rules: [
       {

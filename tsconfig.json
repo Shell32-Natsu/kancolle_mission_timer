@@ -6,6 +6,8 @@
     "module": "commonjs",
     "target": "es6",
     "jsx": "react",
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "lib": ["dom", "webworker"]
   }
 }
