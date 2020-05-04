@@ -1,10 +1,10 @@
 import * as React from "react";
-import { withStyles, createStyles, Theme } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import Snackbar from '@material-ui/core/Snackbar';
-import Typography from '@material-ui/core/Typography';
-import MissionPanels from './MissonPanels';
-import { getMissionInfo, MissionInfo } from '../MissionInfo';
+import { withStyles, createStyles, Theme } from "@material-ui/core/styles";
+import Container from "@material-ui/core/Container";
+import Snackbar from "@material-ui/core/Snackbar";
+import Typography from "@material-ui/core/Typography";
+import MissionPanels from "./MissonPanels";
+import { getMissionInfo, MissionInfo } from "../MissionInfo";
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -12,7 +12,7 @@ const styles = (theme: Theme) => createStyles({
     backgroundColor: theme.palette.background.default
   },
   githubLink: {
-    padding: '0.5rem 1rem'
+    padding: "0.5rem 1rem"
   }
 });
 
@@ -49,7 +49,7 @@ class Main extends React.Component<{ classes: Record<string, string> }> {
         <MissionPanels missionInfo={this.state.missionInfo} />
         <Snackbar open={this.state.snackBarOpen} autoHideDuration={5000} message={this.state.snackBarMessage} onClose={this.closeSnackBar} />
         <Typography align="center" className={classes.githubLink}>
-          <a href="https://github.com/Shell32-Natsu/kancolle_mission_timer" target="_blank">GitHub</a>
+          <a href="https://github.com/Shell32-Natsu/kancolle_mission_timer" target="_blank" rel="noopener noreferrer">GitHub</a>
         </Typography>
       </Container>
     );
