@@ -132,7 +132,7 @@ class MissionPanel extends React.Component<{
         _nowTime += 60;
       if (this.state.endTime <= _nowTime) {
         this.stopTimer();
-        if (this.state.notify)
+        if (this.state.notify) {
           this.props.serviceWorkerRegistration.showNotification(
             `远征「${this.props.missionInfo[this.state.missionId].name}」结束`,
             {
@@ -148,6 +148,7 @@ class MissionPanel extends React.Component<{
               ]
             }
           );
+        }
       }
       else {
         this.setState({
@@ -168,11 +169,12 @@ class MissionPanel extends React.Component<{
   }
 
   async componentDidMount() {
-    const msgChannel = this.props.msgChannel;
-    msgChannel.port1.onmessage = (msg: MessageEvent) => {
-      console.log(JSON.stringify(msg.data, null, 2));
-      if (msg.data.restart)
+    const channel = new BroadcastChannel("kancolle_mission_timer");
+    channel.onmessage = (event) => {
+      if (event.data.fleetId === this.fleetId && event.data.restart) {
+        console.log(`Accept restart message for ${event.data.fleetId}`);
         this.startTimer();
+      }
     };
   }
 

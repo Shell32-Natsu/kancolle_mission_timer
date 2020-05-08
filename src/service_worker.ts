@@ -1,30 +1,22 @@
 export default null;
 declare var self: ServiceWorkerGlobalScope;
 
-let fleetPorts = new Map();
-
 self.addEventListener("notificationclick", (event: any) => {
   event.notification.close();
   if (event.action === "restart-timer") {
     // Restart the timer
     const fleetId = event.notification.tag;
-    const port = fleetPorts.get(fleetId);
-    if (port === undefined) {
-      console.warn(`Port not found for ${fleetId}!`);
-      return;
-    }
-    port.postMessage({
-      restart: true
+    const channel = new BroadcastChannel("kancolle_mission_timer");
+    channel.postMessage({
+      restart: true,
+      fleetId
     });
   }
 }, false);
 
-self.addEventListener("message", event => {
-  if (event.data && event.data.type === "INIT_PORT") {
-    let fleetId: string = event.data.fleetId;
-    console.log(`Register port for ${fleetId}`);
-    fleetPorts.set(fleetId, event.ports[0]);
-  }
+self.addEventListener("activate", () => {
+  self.clients.claim();
+  console.log("Claimed clients");
 });
 
 self.addEventListener("install", async () => {

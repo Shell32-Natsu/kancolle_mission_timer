@@ -54,21 +54,11 @@ class Main extends React.Component<{ classes: Record<string, string> }> {
           console.log("Service worker is active.");
           resolve(registration);
         },
-        registered() {
-          console.log("Service worker has been registered.");
-        },
         error(error) {
           reject("Error during service worker registration:" + error);
         }
       });
     });
-    for (let i = 0; i < FLEET_NUM; i++) {
-      const channel = this.state.msgChannels[i];
-      navigator.serviceWorker.controller.postMessage({
-        type: "INIT_PORT",
-        fleetId: `fleet_${i}`
-      }, [channel.port2]);
-    }
     this.setState({
       serviceWorkerRegistration: registration
     });
