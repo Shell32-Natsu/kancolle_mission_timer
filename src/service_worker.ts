@@ -9,8 +9,10 @@ self.addEventListener("notificationclick", (event: any) => {
     // Restart the timer
     const fleetId = event.notification.tag;
     const port = fleetPorts.get(fleetId);
-    if (port === undefined)
+    if (port === undefined) {
+      console.warn(`Port not found for ${fleetId}!`);
       return;
+    }
     port.postMessage({
       restart: true
     });
